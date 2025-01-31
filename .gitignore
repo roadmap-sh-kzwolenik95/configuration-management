@@ -1,0 +1,56 @@
+# Ansible Files
+*.retry
+.releases/
+.deps/
+*.secret
+*id_rsa*
+*id_dsa*
+*.pem
+*.ppk
+*.pub
+*.ssh/
+
+# Terraform Files
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# Log Files
+*.log
+releases/
+.deps/
+*.retry
+
+# State Files
+crash.log
+crash.*.log
+
+# Sensitive Data
+*.pem
+*.key
+*.pub
+.envrc
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+# ignore temporary files
+*.tmp
