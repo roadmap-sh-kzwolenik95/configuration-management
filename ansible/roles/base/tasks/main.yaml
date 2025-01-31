@@ -1,0 +1,18 @@
+# basic server setup
+
+# due to the problem with fedora 41 using dnf5 but it doesnt have python3-libdnf5 which is required by ansible we can use dnf4 as a backup to install it
+- name: Install python3-libdnf5 if missing
+  ansible.builtin.dnf:
+    use_backend: dnf4
+    name: python3-libdnf5
+    state: present
+
+- name: Update packages
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+    update_only: true
+- name: Install fail2ban
+  ansible.builtin.dnf:
+    name: fail2ban
+    state: present

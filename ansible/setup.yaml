@@ -1,0 +1,10 @@
+- name: Run Hello World on DigitalOcean hosts
+  hosts: all
+  remote_user: root
+  vars:
+    full_domain: ans.kzwolenik.com
+  roles:
+    - role: base
+    - role: nginx
+    - role: app
+    - role: ssh

@@ -1,0 +1,8 @@
+- name: Deploy the site files to the server
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /var/www/{{ full_domain }}/html/
+    owner: root
+    group: root
+    mode: "0644"
+  with_fileglob: "../site_files/*"

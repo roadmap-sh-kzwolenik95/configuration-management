@@ -1,0 +1,5 @@
+- name: Add public keys from the file to the servers
+  ansible.posix.authorized_key:
+    user: root
+    state: present
+    key: "{{ lookup('file', ssh_pub_key_file_path) }}"
