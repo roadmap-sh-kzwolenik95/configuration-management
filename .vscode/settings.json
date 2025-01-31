@@ -1,0 +1,4 @@
+{
+  "ansible.python.interpreterPath": "/usr/bin/python3.11",
+  "ansible.executionEnvironment.enabled": true
+}
