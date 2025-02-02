@@ -25,6 +25,7 @@ resource "digitalocean_droplet" "fedora" {
   ssh_keys = [
     data.digitalocean_ssh_key.terraform.id
   ]
+  tags = [ "roadmapsh-fedora-web" ]
 }
 
 data "http" "runner_ip" {

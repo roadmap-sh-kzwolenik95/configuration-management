@@ -11,7 +11,6 @@ terraform {
   }
 }
 
-variable "pvt_key" { sensitive = true }
 provider "digitalocean" {}
 
 data "digitalocean_ssh_key" "terraform" {

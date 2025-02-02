@@ -12,6 +12,7 @@ variable "size" {
 variable "name" {
   description = "Droplet name"
   type        = string
+  default     = "web"
 }
 variable "apex-domain" {
   description = "Domain registered in CloudFlare"

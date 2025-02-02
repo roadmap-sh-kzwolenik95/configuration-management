@@ -1,0 +1,80 @@
+name: deploy pipeline
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    env:
+      DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_API_TOKEN }}
+      TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      TF_VAR_my-machine-pub-key: ${{ vars.PUB_KEY }}
+      TF_VAR_apex-domain: ${{ vars.APEX_DOMAIN }}
+      TF_VAR_subdomain: ${{ vars.SUBDOMAIN }}
+      TF_VAR_ssh-key-name: ${{ vars.DO_KEY_NAME }}
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        run: terraform plan -no-color
+
+      - name: Terraform Apply
+        run: terraform apply -no-color --auto-approve
+  ansible-deploy:
+    needs: terraform
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ansible
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_API_TOKEN }}
+
+      - name: Public IP
+        id: ip
+        uses: haythem/public-ip@v1.3
+
+      - name: Whitelist runner Ip
+        run: |
+          doctl compute firewall create \
+            --name "whitelist-runner" \
+            --inbound-rules "protocol:tcp,ports:22,address:${{ steps.ip.outputs.ipv4 }}/32" \
+            --tag-names "roadmapsh-fedora-web"
+
+      - name: Run Ansible playbook
+        uses: dawidd6/action-ansible-playbook@v2.8.0
+        with:
+          playbook: setup.yaml
+          key: ${{ secrets.SSH_PRIV_KEY }}
+          options: |
+            --extra-vars full_domain=${{ vars.SUBDOMAIN }}.${{ vars.APEX_DOMAIN }} acme_email=${{ vars.ACME_EMAIL }}
+
+      - name: Whitelist runner Ip
+        run: |
+          doctl compute firewall delete -f whitelist-runner
