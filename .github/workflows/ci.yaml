@@ -73,7 +73,8 @@ jobs:
           playbook: setup.yaml
           key: ${{ secrets.SSH_PRIV_KEY }}
           options: |
-            --extra-vars full_domain=${{ vars.SUBDOMAIN }}.${{ vars.APEX_DOMAIN }} acme_email=${{ vars.ACME_EMAIL }}
+            --extra-vars full_domain=${{ vars.SUBDOMAIN }}.${{ vars.APEX_DOMAIN }}
+            --extra-vars acme_email=${{ vars.ACME_EMAIL }}
 
       - name: Whitelist runner Ip
         run: |
