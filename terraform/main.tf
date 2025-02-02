@@ -51,45 +51,33 @@ resource "digitalocean_firewall" "allow_cloudflare" {
   }
 
   inbound_rule {
-    protocol         = "tcp"
-    port_range       = "1-65535"
+    protocol         = "icmp"
     source_addresses = data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks
   }
 }
 
-resource "digitalocean_firewall" "firewall" {
-  name = "fedora-firewall"
+resource "digitalocean_firewall" "allow_all_http" {
+  name = "Allow-All-Http"
 
   droplet_ids = [digitalocean_droplet.fedora.id]
 
   inbound_rule {
     protocol         = "tcp"
     port_range       = "80"
-    source_addresses = ["${chomp(data.http.runner_ip.response_body)}/32"]
+    source_addresses = ["0.0.0.0/0", "::/0"]
   }
 
   inbound_rule {
     protocol         = "udp"
     port_range       = "443"
-    source_addresses = ["${chomp(data.http.runner_ip.response_body)}/32"]
+    source_addresses = ["0.0.0.0/0", "::/0"]
   }
+}
 
-  inbound_rule {
-    protocol         = "tcp"
-    port_range       = "1-65535"
-    source_addresses = ["${chomp(data.http.runner_ip.response_body)}/32"]
-  }
+resource "digitalocean_firewall" "allow_all_outbound" {
+  name = "Allow-All-Outbound"
 
-  inbound_rule {
-    protocol         = "udp"
-    port_range       = "1-65535"
-    source_addresses = ["${chomp(data.http.runner_ip.response_body)}/32"]
-  }
-
-  inbound_rule {
-    protocol         = "icmp"
-    source_addresses = ["${chomp(data.http.runner_ip.response_body)}/32"]
-  }
+  droplet_ids = [digitalocean_droplet.fedora.id]
 
   outbound_rule {
     protocol              = "tcp"
@@ -109,6 +97,29 @@ resource "digitalocean_firewall" "firewall" {
   }
 }
 
+resource "digitalocean_firewall" "allow_runner" {
+  name = "Allow-Runner"
+
+  droplet_ids = [digitalocean_droplet.fedora.id]
+
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "1-65535"
+    source_addresses = ["${chomp(data.http.runner_ip.response_body)}/32"]
+  }
+
+  inbound_rule {
+    protocol         = "udp"
+    port_range       = "1-65535"
+    source_addresses = ["${chomp(data.http.runner_ip.response_body)}/32"]
+  }
+
+  inbound_rule {
+    protocol         = "icmp"
+    source_addresses = ["${chomp(data.http.runner_ip.response_body)}/32"]
+  }
+}
+
 data "cloudflare_zone" "domain-zone" {
   name = var.apex-domain
 }
@@ -118,7 +129,7 @@ resource "cloudflare_record" "url" {
   name    = var.subdomain
   content = resource.digitalocean_droplet.fedora.ipv4_address
   type    = "A"
-  proxied = true
+  proxied = false
 }
 
 resource "cloudflare_page_rule" "ssl-setting" {

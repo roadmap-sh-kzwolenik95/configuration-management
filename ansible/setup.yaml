@@ -1,8 +1,6 @@
-- name: Run Hello World on DigitalOcean hosts
+- name: Deploy static website
   hosts: all
   remote_user: root
-  vars:
-    full_domain: ans.kzwolenik.com
   roles:
     - role: base
     - role: nginx
