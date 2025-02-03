@@ -72,6 +72,8 @@ jobs:
 
       - name: Run Ansible playbook
         uses: dawidd6/action-ansible-playbook@v2.8.0
+        env:
+          DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_API_TOKEN }}
         with:
           playbook: setup.yaml
           directory: ansible
