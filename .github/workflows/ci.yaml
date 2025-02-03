@@ -83,4 +83,5 @@ jobs:
       - name: Un-whitelist runner Ip
         if: steps.whitelist-ip.outcome == 'success'
         run: |
-          doctl compute firewall delete -f $(cat doapiout | jq -r '.[] | select(.name == "whitelist-runner") | .id')
+          doctl compute firewall delete -f \
+            $(doctl compute firewall list --format ID,Name --output json | jq -r '.[] | select(.name == "whitelist-runner") | .id')
