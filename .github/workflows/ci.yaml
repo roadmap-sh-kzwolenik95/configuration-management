@@ -79,6 +79,7 @@ jobs:
           options: |
             --extra-vars full_domain=${{ vars.SUBDOMAIN }}.${{ vars.APEX_DOMAIN }}
             --extra-vars acme_email=${{ vars.ACME_EMAIL }}
+            --inventory inventory_digitalocean.yaml
 
       - name: Un-whitelist runner Ip
         if: steps.whitelist-ip.outcome == 'success'
