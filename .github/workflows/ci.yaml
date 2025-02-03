@@ -80,7 +80,7 @@ jobs:
             --extra-vars full_domain=${{ vars.SUBDOMAIN }}.${{ vars.APEX_DOMAIN }}
             --extra-vars acme_email=${{ vars.ACME_EMAIL }}
 
-      - name: Whitelist runner Ip
+      - name: Un-whitelist runner Ip
         if: steps.whitelist-ip.outcome == 'success'
         run: |
-          doctl compute firewall delete -f whitelist-runner
+          doctl compute firewall delete -f $(cat doapiout | jq -r '.[] | select(.name == "whitelist-runner") | .id')
