@@ -1,4 +1,12 @@
 terraform {
+  cloud {
+    organization   = "roadmap-sh"
+    hostname       = "app.terraform.io"
+
+    workspaces {
+      name = "configuration-management"
+    }
+  }
   required_providers {
     digitalocean = {
       source  = "digitalocean/digitalocean"

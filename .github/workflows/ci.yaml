@@ -14,6 +14,7 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
     env:
+      TF_FORCE_LOCAL_BACKEND: 1
       DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_API_TOKEN }}
       TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       TF_VAR_my-machine-pub-key: ${{ vars.PUB_KEY }}
