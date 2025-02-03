@@ -63,6 +63,7 @@ jobs:
         uses: haythem/public-ip@v1.3
 
       - name: Whitelist runner Ip
+        id: whitelist-ip
         run: |
           doctl compute firewall create \
             --name "whitelist-runner" \
@@ -73,11 +74,13 @@ jobs:
         uses: dawidd6/action-ansible-playbook@v2.8.0
         with:
           playbook: setup.yaml
+          directory: ansible
           key: ${{ secrets.SSH_PRIV_KEY }}
           options: |
             --extra-vars full_domain=${{ vars.SUBDOMAIN }}.${{ vars.APEX_DOMAIN }}
             --extra-vars acme_email=${{ vars.ACME_EMAIL }}
 
       - name: Whitelist runner Ip
+        if: steps.whitelist-ip.outcome == 'success'
         run: |
           doctl compute firewall delete -f whitelist-runner
