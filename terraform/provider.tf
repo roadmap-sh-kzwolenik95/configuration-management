@@ -1,7 +1,7 @@
 terraform {
   cloud {
-    organization   = "roadmap-sh"
-    hostname       = "app.terraform.io"
+    organization = "roadmap-sh"
+    hostname     = "app.terraform.io"
 
     workspaces {
       name = "configuration-management"
@@ -22,7 +22,7 @@ terraform {
 provider "digitalocean" {}
 
 data "digitalocean_ssh_key" "terraform" {
-  name = var.ssh-key-name
+  name = var.ssh_key_name
 }
 
 variable "cloudflare_api_token" { sensitive = true }

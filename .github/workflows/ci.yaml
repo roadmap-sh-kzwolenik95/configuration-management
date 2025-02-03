@@ -17,10 +17,11 @@ jobs:
       TF_FORCE_LOCAL_BACKEND: 1
       DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_API_TOKEN }}
       TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      TF_VAR_my-machine-pub-key: ${{ vars.PUB_KEY }}
-      TF_VAR_apex-domain: ${{ vars.APEX_DOMAIN }}
+      TF_VAR_my_machine_pub_key: ${{ vars.PUB_KEY }}
+      TF_VAR_apex_domain: ${{ vars.APEX_DOMAIN }}
       TF_VAR_subdomain: ${{ vars.SUBDOMAIN }}
-      TF_VAR_ssh-key-name: ${{ vars.DO_KEY_NAME }}
+      TF_VAR_ssh_key_name: ${{ vars.DO_KEY_NAME }}
+      TF_TOKEN_app_terraform_io: ${{ secrets.HCP_TERRAFORM_TOKEN }}
     defaults:
       run:
         working-directory: terraform

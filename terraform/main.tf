@@ -122,7 +122,7 @@ resource "digitalocean_firewall" "allow_runner" {
 }
 
 data "cloudflare_zone" "domain-zone" {
-  name = var.apex-domain
+  name = var.apex_domain
 }
 
 resource "cloudflare_record" "url" {
@@ -135,7 +135,7 @@ resource "cloudflare_record" "url" {
 
 resource "cloudflare_page_rule" "ssl-setting" {
   zone_id  = data.cloudflare_zone.domain-zone.id
-  target   = "${var.subdomain}.${var.apex-domain}/*"
+  target   = "${var.subdomain}.${var.apex_domain}/*"
   priority = 1
 
   actions {

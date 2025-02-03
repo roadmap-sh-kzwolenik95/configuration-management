@@ -1,4 +1,4 @@
-variable "ssh-key-name" {
+variable "ssh_key_name" {
   type = string
 }
 variable "region" {
@@ -14,7 +14,7 @@ variable "name" {
   type        = string
   default     = "web"
 }
-variable "apex-domain" {
+variable "apex_domain" {
   description = "Domain registered in CloudFlare"
   type        = string
 }
