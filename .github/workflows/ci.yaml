@@ -85,7 +85,7 @@ jobs:
             --inventory inventory_digitalocean.yaml
 
       - name: Un-whitelist runner Ip
-        if: steps.whitelist-ip.outcome == 'success'
+        if: ${{ always() && steps.whitelist-ip.outcome == 'success' }}
         run: |
           doctl compute firewall delete -f \
             $(doctl compute firewall list --format ID,Name --output json | jq -r '.[] | select(.name == "whitelist-runner") | .id')

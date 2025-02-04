@@ -46,7 +46,7 @@ resource "digitalocean_firewall" "allow_cloudflare" {
   }
 
   inbound_rule {
-    protocol         = "udp"
+    protocol         = "tcp"
     port_range       = "443"
     source_addresses = data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks
   }
