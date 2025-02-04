@@ -18,3 +18,4 @@ compose:
   distro: do_image.distribution | lower
 filters:
   - 'do_region.slug == "fra1"'
+  - '"roadmapsh-fedora-web" in do_tags'
