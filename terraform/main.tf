@@ -69,7 +69,7 @@ resource "digitalocean_firewall" "allow_all_http" {
   }
 
   inbound_rule {
-    protocol         = "udp"
+    protocol         = "tcp"
     port_range       = "443"
     source_addresses = ["0.0.0.0/0", "::/0"]
   }
@@ -105,18 +105,7 @@ resource "digitalocean_firewall" "allow_runner" {
 
   inbound_rule {
     protocol         = "tcp"
-    port_range       = "1-65535"
-    source_addresses = ["${chomp(data.http.runner_ip.response_body)}/32"]
-  }
-
-  inbound_rule {
-    protocol         = "udp"
-    port_range       = "1-65535"
-    source_addresses = ["${chomp(data.http.runner_ip.response_body)}/32"]
-  }
-
-  inbound_rule {
-    protocol         = "icmp"
+    port_range       = "22"
     source_addresses = ["${chomp(data.http.runner_ip.response_body)}/32"]
   }
 }
@@ -131,14 +120,4 @@ resource "cloudflare_record" "url" {
   content = resource.digitalocean_droplet.fedora.ipv4_address
   type    = "A"
   proxied = false
-}
-
-resource "cloudflare_page_rule" "ssl-setting" {
-  zone_id  = data.cloudflare_zone.domain-zone.id
-  target   = "${var.subdomain}.${var.apex_domain}/*"
-  priority = 1
-
-  actions {
-    ssl = "flexible"
-  }
 }

@@ -1,0 +1,12 @@
+[sshd]
+enabled = true
+action = iptables[type=multiport, name=SSH, port=ssh, protocol=tcp]
+
+[nginx-errors]
+enabled = true
+filter = nginx-errors
+logpath = /var/log/nginx/error.log
+axretry = 5
+findtime = 300
+bantime = 3600
+action = iptables[type=multiport, name=HTTP_HTTPS, port="http,https", protocol=tcp]

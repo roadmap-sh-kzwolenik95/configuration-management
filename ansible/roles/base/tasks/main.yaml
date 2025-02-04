@@ -12,7 +12,30 @@
     name: "*"
     state: latest
     update_only: true
+
 - name: Install fail2ban
   ansible.builtin.dnf:
     name: fail2ban
     state: present
+
+- name: Add fail2ban filter definition
+  ansible.builtin.copy:
+    src: files/nginx-errors.conf
+    dest: /etc/fail2ban/filter.d/
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Confiure fail2ban local.jail
+  ansible.builtin.copy:
+    src: files/jail.local
+    dest: /etc/fail2ban/
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Enable and start fail2ban
+  ansible.builtin.service:
+    name: fail2ban
+    enabled: true
+    state: restarted

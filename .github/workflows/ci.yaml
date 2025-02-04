@@ -43,6 +43,7 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -no-color --auto-approve
+
   ansible-deploy:
     needs: terraform
     runs-on: ubuntu-latest
