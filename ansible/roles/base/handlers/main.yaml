@@ -1,0 +1,4 @@
+- name: Reload fail2ban config
+  ansible.builtin.service:
+    name: fail2ban
+    state: reloaded

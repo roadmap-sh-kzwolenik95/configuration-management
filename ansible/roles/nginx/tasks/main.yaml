@@ -3,10 +3,12 @@
   ansible.builtin.dnf:
     name: nginx
     state: present
+
 - name: Install snap
   ansible.builtin.dnf:
     name: snapd
     state: present
+
 - name: Link snap
   ansible.builtin.file:
     src: /var/lib/snapd/snap
@@ -14,17 +16,23 @@
     owner: root
     group: root
     state: link
+
 - name: Install certbot
   community.general.snap:
     name: certbot
     classic: true
+
 - name: Copy Nginx site config to sites-enabled
   ansible.builtin.template:
     src: templates/site-config.j2
     dest: "/etc/nginx/conf.d/{{ full_domain }}.conf"
+    force: false
     owner: root
     group: root
     mode: "0644"
+  notify:
+    - Reload nginx config
+
 - name: Create directory for the site files
   ansible.builtin.file:
     path: /var/www/{{ full_domain }}/html/
@@ -32,21 +40,20 @@
     owner: root
     group: root
     mode: "0755"
-- name: Reload nginx config
-  ansible.builtin.systemd:
-    name: nginx
-    state: reloaded
+  notify:
+    - Reload nginx config
+
 - name: Configure ssl with certbot
   ansible.builtin.command:
     argv:
-      - 'certbot'
-      - '--non-interactive'
-      - '--nginx'
-      - '--test-cert'
-      - '--email'
-      - '{{ acme_email }}'
-      - '--agree-tos'
-      - '--domains'
-      - '{{ full_domain }}'
+      - "certbot"
+      - "--non-interactive"
+      - "--nginx"
+      - "--test-cert"
+      - "--email"
+      - "{{ acme_email }}"
+      - "--agree-tos"
+      - "--domains"
+      - "{{ full_domain }}"
   register: cmd_output
   changed_when: cmd_output.rc != 0
