@@ -48,6 +48,27 @@ Before deploying the website, ensure you have the following:
 1. **Fork this repository** - if all prerequisites are met, the pipeline will automatically start and deploy the website.
 2. **Clean up resources** - once you're done, you can manually destroy the Terraform-managed infrastructure to avoid unnecessary costs.
 
+# Using tags to run specific role
+
+```console
+ansible-playbook -i inventory_digitalocean.yaml setup.yaml --tags ssh
+```
+In this example, only the `ssh` role was executed. This means that if we only need to add new SSH keys to the authorized keys, we can save time by using tags.
+```console
+PLAY [Deploy static website] *********************************************************************************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] ***************************************************************************************************************************************************************************************************************************************************
+[WARNING]: Platform linux on host web is using the discovered Python interpreter at /usr/bin/python3.13, but future installation of another Python interpreter could change the meaning of that path. See https://docs.ansible.com/ansible-
+core/2.18/reference_appendices/interpreter_discovery.html for more information.
+ok: [web]
+
+TASK [ssh : Add public keys from the file to the servers] ****************************************************************************************************************************************************************************************************************
+ok: [web]
+
+PLAY RECAP ***************************************************************************************************************************************************************************************************************************************************************
+web                        : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+```
+
 # Fail2ban example:
 
 Fail2ban was installed with the role `base`, it was configured to block failed attempts to ssh and failed requests to the hosted website
