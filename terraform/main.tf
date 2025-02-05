@@ -25,36 +25,11 @@ resource "digitalocean_droplet" "fedora" {
   ssh_keys = [
     data.digitalocean_ssh_key.terraform.id
   ]
-  tags = [ "roadmapsh-fedora-web" ]
+  tags = ["roadmapsh-fedora-web"]
 }
 
 data "http" "runner_ip" {
   url = "http://checkip.amazonaws.com"
-}
-
-data "cloudflare_ip_ranges" "cloudflare" {}
-
-resource "digitalocean_firewall" "allow_cloudflare" {
-  name = "Allow-CloudFlare"
-
-  droplet_ids = [digitalocean_droplet.fedora.id]
-
-  inbound_rule {
-    protocol         = "tcp"
-    port_range       = "80"
-    source_addresses = data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks
-  }
-
-  inbound_rule {
-    protocol         = "tcp"
-    port_range       = "443"
-    source_addresses = data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks
-  }
-
-  inbound_rule {
-    protocol         = "icmp"
-    source_addresses = data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks
-  }
 }
 
 resource "digitalocean_firewall" "allow_all_http" {
@@ -107,6 +82,18 @@ resource "digitalocean_firewall" "allow_runner" {
     protocol         = "tcp"
     port_range       = "22"
     source_addresses = ["${chomp(data.http.runner_ip.response_body)}/32"]
+  }
+}
+
+resource "digitalocean_firewall" "allow_admins" {
+  name = "Allow-Admins"
+
+  droplet_ids = [digitalocean_droplet.fedora.id]
+
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "22"
+    source_addresses = split(var.admin_ips)
   }
 }
 

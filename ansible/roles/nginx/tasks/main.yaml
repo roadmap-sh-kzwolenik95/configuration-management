@@ -44,7 +44,7 @@
     - Reload nginx config
 
 - name: Flush handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Configure ssl with certbot
   ansible.builtin.command:
@@ -52,7 +52,7 @@
       - "certbot"
       - "--non-interactive"
       - "--nginx"
-      - "--test-cert"
+      # - "--test-cert" # test cert to avoid rate limits
       - "--email"
       - "{{ acme_email }}"
       - "--agree-tos"

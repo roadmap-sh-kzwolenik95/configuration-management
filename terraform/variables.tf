@@ -21,3 +21,7 @@ variable "apex_domain" {
 variable "subdomain" {
   type = string
 }
+variable "admin_ips" {
+  description = "Comma separated CIDRs"
+  type        = string
+}
