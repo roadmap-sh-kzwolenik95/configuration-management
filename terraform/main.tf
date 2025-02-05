@@ -93,7 +93,7 @@ resource "digitalocean_firewall" "allow_admins" {
   inbound_rule {
     protocol         = "tcp"
     port_range       = "22"
-    source_addresses = split(var.admin_ips)
+    source_addresses = split(",", var.admin_ips)
   }
 }
 
