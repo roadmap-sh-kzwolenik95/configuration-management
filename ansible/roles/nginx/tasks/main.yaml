@@ -43,6 +43,9 @@
   notify:
     - Reload nginx config
 
+- name: Flush handlers
+  meta: flush_handlers
+
 - name: Configure ssl with certbot
   ansible.builtin.command:
     argv:
